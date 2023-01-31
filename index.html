@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <title>Help center</title>
+</head>
 
+<body>
     <style>
         *,
         *::before,
@@ -250,9 +252,6 @@
             display: none;
         }
     </style>
-</head>
-
-<body>
     <div class="container-form">
         <div class="first-contact-container on">
             <form id="new_request_form">
@@ -288,14 +287,6 @@
                                         value="0" checked="checked"> <label for="orderno">No, I have not ordered
                                         yet</label> </div>
                             </div>
-                        </div>
-                        <div class="container-input input-capcha">
-                            <div class="g-recaptcha" data-sitekey=""></div>
-                            <script type="text/javascript" async=""
-                                src="https://www.gstatic.com/recaptcha/releases/RGRQD9tdxHtnt-Bxkx9pM75S/recaptcha__en.js"
-                                crossorigin="anonymous"
-                                integrity="sha384-W8ETClQtM/DZAB3p5sw146UrQAPyub9gIZYHQB3Ey3l+JjCXJORASw7N7e2EBWxw"></script>
-                            <script src="https://www.google.com/recaptcha/api.js" async="" defer="defer"></script>
                         </div>
                     </div>
                     <div class="block-msg">
@@ -574,16 +565,16 @@
             init();
         };
     </script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 
-    <script>
-        var socket = io();
+        const socket = io();
 
         var messages = document.getElementById('messages');
-        var form2 = document.getElementById('form');
+        var form3 = document.getElementById('form');
         var input = document.getElementById('input');
 
-        form2.addEventListener('submit', function (e) {
+        form3.addEventListener('submit', function (e) {
             e.preventDefault();
             if (input.value) {
                 socket.emit('chat message', input.value);
@@ -597,8 +588,8 @@
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
         });
-    </script>
 
+    </script>
 </body>
 
 </html>
