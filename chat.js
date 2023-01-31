@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
 export default function Chat() {
-    var socket = io('ws://localhost:3030')
+    var socket = io()
 
     var messages = document.getElementById('messages');
     var form = document.getElementById('form');
