@@ -1,4 +1,5 @@
 const app = require('express')();
+const cors = require('cors');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 3030;
@@ -6,6 +7,8 @@ const port = process.env.PORT || 3030;
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+
+app.use(cors());
 
 io.on('connection', (socket) => {
   socket.on('chat message', msg => {
