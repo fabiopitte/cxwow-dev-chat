@@ -568,7 +568,7 @@
 
     <script type="module">
 
-        import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js';
+        import { io } from 'socket.io-client';
 
         var socket = io()
 
@@ -591,15 +591,7 @@
             window.scrollTo(0, document.body.scrollHeight);
         });
 
-        debugger
-
-        import Chat from 'chat.js';
-        debugger
-
     </script>
-
-    <script type="module" src="/chat.js"></script>
-
 
     <!-- <script type="module">
         // import Chat from '/chat.js';
