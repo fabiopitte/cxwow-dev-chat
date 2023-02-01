@@ -257,64 +257,40 @@
             <form id="new_request_form">
                 <div class="block-form-items">
                     <div class="form-items">
-                        <div> <label for="subject">Subject</label>
-                            <div class="container-input"> <input type="text" name="subject" placeholder="Subject">
-                            </div>
-                        </div>
-                        <div> <label for="description">Let us know what we can help you with.</label>
-                            <div class="container-input"> <textarea type="text" name="description"
-                                    placeholder="Write something..." maxlength="500"></textarea> </div>
-                        </div>
-                        <div> <label for="email">Your email address</label>
-                            <div class="container-input"> <input type="email" name="email" placeholder="Email"> </div>
-                        </div>
-                        <div> <label for="phone">Phone number</label>
-                            <div class="container-input"> <input type="text" value="" name="phone"
-                                    placeholder="Phone number"> </div>
-                        </div>
                         <div>
-                            <div class="input-label">If you have an order number please indicate that here</div>
-                            <div class="container-isOrder">
-                                <div>
-                                    <div class="container-input-radio"> <input type="radio" id="orderyes" name="isOrder"
-                                            value="1"> <label for="orderyes">Yes, I have an order Number</label> </div>
-                                    <div class="container-orderNumber hidden">
-                                        <div class="container-input"> <input type="text" value="" name="orderNumber"
-                                                placeholder="Order number if know"> </div>
-                                    </div>
-                                </div>
-                                <div class="container-input-radio"> <input type="radio" id="orderno" name="isOrder"
-                                        value="0" checked="checked"> <label for="orderno">No, I have not ordered
-                                        yet</label> </div>
+                            <label for="email">Your email</label>
+                            <div class="container-input">
+                                <input type="email" name="email" placeholder="Email">
                             </div>
                         </div>
                     </div>
-                    <div class="block-msg">
-                        <div id="msg-form" value="asdad">asdasda</div>
+                </div>
+        </div>
+        <div class="block-btn">
+            <div class="container-btn-submit"> <button type="submit" class="btn-submit cx-btn-cta"> <span
+                        class="inner">Start</span> </button> </div>
+        </div>
+        </form>
+    </div>
+    <div class="chat-container off">
+        <ul id="messages"></ul>
+        <form id="form" action="">
+            <div class="block-form-items">
+                <div class="form-items">
+                    <div class="container-input">
+                        <input id="input" autocomplete="off" type="text" name="subject" placeholder="Subject">
+                    </div>
+                    <div class="block-btn">
+                        <div class="container-btn-submit"> <button type="submit" class="btn-submit cx-btn-cta">
+                                <span class="inner">Send</span> </button> </div>
                     </div>
                 </div>
-                <div class="block-btn">
-                    <div class="container-btn-submit"> <button type="submit" class="btn-submit cx-btn-cta"> <span
-                                class="inner">Send</span> </button> </div>
-                </div>
-            </form>
-        </div>
-        <div class="chat-container off">
-            <ul id="messages"></ul>
-            <form id="form" action="">
-                <div class="block-form-items">
-                    <div class="form-items">
-                        <div class="container-input">
-                            <input id="input" autocomplete="off" type="text" name="subject" placeholder="Subject">
-                        </div>
-                        <div class="block-btn">
-                            <div class="container-btn-submit"> <button type="submit" class="btn-submit cx-btn-cta">
-                                    <span class="inner">Send</span> </button> </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
+    </div>
+    <div class="block-msg">
+        <div id="msg-form"></div>
+    </div>
     </div>
     <script>
         const BASE_API_URL = "https://cxwow-prod-api-gateway.azurewebsites.net";
@@ -391,9 +367,6 @@
                 "isOrder"
             ];
 
-            let inputFile = document.querySelectorAll("#attachment")
-            inputFile = inputFile[0]
-
             if (params.isOrder === "0") {
                 listIgnore = [...listIgnore, "issue", "orderNumber"];
             }
@@ -402,22 +375,11 @@
             let isError = [];
 
             for (let key of newParams) {
-                if (params[key] == "" ||
-                    key == "attachment" && inputFile?.files?.length > 5 ||
-                    key == "email" && !validationEmail(params[key]) ||
-                    key == "phone" && !validationPhone(params[key])) {
+                if (params[key] == "" || key == "email" && !validationEmail(params[key])) {
                     let msg = null
-
-                    if (key == "attachment") {
-                        msg = "Limit file upload is 5 files"
-                    }
 
                     if (key == "email" && params[key].length) {
                         msg = "Invalid email."
-                    }
-
-                    if (key == "phone" && params[key].length) {
-                        msg = "Invalid phone number."
                     }
 
                     isError = [...isError, key];
@@ -463,7 +425,7 @@
         async function sendInquiry_fetcher(params) {
             if (!validation(params)) return;
 
-            const { subject, attachment, isOrder, orderNumber, ...newParams } = params;
+            const { ...newParams } = params;
 
             const blockMsg = document.querySelectorAll("#msg-form")[0];
             blockMsg.removeAttribute("class");
@@ -475,9 +437,6 @@
                 msgEle: '<svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>'
             });
 
-            delete newParams["g-recaptcha-response"]
-
-            const newOrderNumber = isOrder === "1" ? { orderNumber } : {}
             const requestData = {
                 method: "POST",
                 headers: {
@@ -485,15 +444,11 @@
                 },
                 body: buildParamsFormData({
                     identifier: params?.identifier || "identifier",
-                    subject,
-                    attachment,
-                    ...newOrderNumber,
-                    body: JSON.stringify({ ...newParams, ...newOrderNumber }),
+                    body: JSON.stringify({ ...newParams }),
                 }),
             };
 
             try {
-
                 const firstContactElement = document.getElementsByClassName('first-contact-container')[0];
                 firstContactElement.classList.remove('on');
                 firstContactElement.classList.add('off');
@@ -506,7 +461,7 @@
                 // const rs = await fetch(BASE_API_URL + "/contactform", requestData);
                 // if (rs?.status !== 200) throw Error;
                 // send successfully
-                handleMsg({ ele: blockMsg, isError: false, msg: "âœ” Sent successfully." });
+                handleMsg({ ele: blockMsg, isError: false, msg: "loading..." });
                 formReset();
             } catch (error) {
                 console.log("[send form error]", error);
@@ -526,21 +481,8 @@
             });
         }
 
-        function handleHiddenOrderNumber(form) {
-            if (document.getElementsByClassName("container-orderNumber")?.length) {
-                const orderNumberEle = document.getElementsByClassName("container-orderNumber")[0]
-                const serializeFormDataRaw = serializeFormData(form)
-                if (serializeFormDataRaw?.isOrder === "0") {
-                    orderNumberEle.classList.add("hidden")
-                } else {
-                    orderNumberEle.classList.remove("hidden")
-                }
-            }
-        }
-
         function handleOnChangeForm() {
             form.addEventListener("change", function () {
-                handleHiddenOrderNumber(form)
                 validation(serializeFormData(form))
             });
         }
@@ -548,10 +490,6 @@
         function validationEmail(email) {
             const regx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/;
             return regx.test(email)
-        }
-
-        function validationPhone(phone) {
-            return !!Number(phone);
         }
 
         window.onload = () => {
@@ -579,12 +517,12 @@
         form3.addEventListener('submit', function (e) {
             e.preventDefault();
             if (input.value) {
-                socket.emit('chat message', input.value);
+                socket.emit('sendMessage', input.value);
                 input.value = '';
             }
         });
 
-        socket.on('chat message', function (msg) {
+        socket.on('sendMessage', function (msg) {
             var item = document.createElement('li');
             item.textContent = msg;
             messages.appendChild(item);
