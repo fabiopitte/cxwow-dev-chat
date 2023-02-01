@@ -565,10 +565,12 @@
             init();
         };
     </script>
-    <script type="module">
-        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 
-        const socket = io();
+    <script type="module">
+
+        import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js';
+
+        var socket = io()
 
         var messages = document.getElementById('messages');
         var form3 = document.getElementById('form');
@@ -589,7 +591,42 @@
             window.scrollTo(0, document.body.scrollHeight);
         });
 
+        debugger
+
+        import Chat from 'chat.js';
+        debugger
+
     </script>
+
+    <script type="module" src="/chat.js"></script>
+
+
+    <!-- <script type="module">
+        // import Chat from '/chat.js';
+        // import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+
+        // const socket = io();
+
+        // var messages = document.getElementById('messages');
+        // var form3 = document.getElementById('form');
+        // var input = document.getElementById('input');
+
+        // form3.addEventListener('submit', function (e) {
+        //     e.preventDefault();
+        //     if (input.value) {
+        //         socket.emit('chat message', input.value);
+        //         input.value = '';
+        //     }
+        // });
+
+        // socket.on('chat message', function (msg) {
+        //     var item = document.createElement('li');
+        //     item.textContent = msg;
+        //     messages.appendChild(item);
+        //     window.scrollTo(0, document.body.scrollHeight);
+        // });
+
+    </script> -->
 </body>
 
 </html>

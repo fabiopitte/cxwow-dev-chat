@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-export default function Chat() {
+export function Chat() {
     var socket = io()
 
     var messages = document.getElementById('messages');
